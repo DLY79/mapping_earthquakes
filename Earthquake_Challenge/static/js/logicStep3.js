@@ -1,6 +1,5 @@
 // Create the map object with center and zoom level.
-//  let map = L.map('mapid').setView([30, 30], 2);
-// I am a comment
+// let map = L.map('mapid').setView([30, 30], 2);
 
 // We create the tile layer that will be the background of our map.
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -14,35 +13,21 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
     maxZoom: 18,
     accessToken: API_KEY
 });
-
-let map = L.map('mapid', {
-  center: [39.5, -98.5],
-  zoom: 4,
-  layers: [streets]
-})
 // Create a base layer that holds both maps.
 let baseMaps = {
-    "Streets": streets,
-    "Satellite": satelliteStreets
+    Streets: streets,
+    Satellite: satelliteStreets
   };
-// Create the earthquake layer for our map.
-let earthquakes = new L.layerGroup();
-
-// We define an object that contains the overlays.
-// This overlay will be visible all the time.
-let overlays = {
-  "Earthquakes": earthquakes
-};
-
-// Then we add a control to the map that will allow the user to change
-// which layers are visible.
-L.control.layers(baseMaps, overlays).addTo(map);
 
   // Create the map object with center, zoom level and default layer.
-
+let map = L.map('mapid', {
+    center: [39.5, -98.5],
+    zoom: 4,
+    layers: [streets]
+})
 
 // Pass our map layers into our layers control and add the layers control to the map.
-// L.control.layers(baseMaps).addTo(map);
+L.control.layers(baseMaps).addTo(map);
 
 // Accessing the airport GeoJSON URL
 // let torontoHoods = "https://raw.githubusercontent.com/DLY79/mapping_earthquakes/Mapping_GeoJSON_Polygons/Mapping_GeoJSON_Polygons/torontoNeighborhoods.json";
@@ -107,34 +92,4 @@ style: styleInfo,
   onEachFeature: function(feature, layer) {
   layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
 }
-}).addTo(earthquakes);
-
-earthquakes.addTo(map);
-let legend = L.control({
-  position: "bottomright"
-});
-legend.onAdd = function (map) {
-
-    var div = L.DomUtil.create('div', 'info legend')
-    const magnitudes = [0, 1, 2, 3, 4, 5];
-    const colors = [
-      "#98ee00",
-      "#d4ee00",
-      "#eecc00",
-      "#ee9c00",
-      "#ea822c",
-      "#ea2c2c"
-    ];  ;
-
-// Looping through our intervals to generate a label with a colored square for each interval.
-for (var i = 0; i < magnitudes.length; i++) {
-  console.log(colors[i]);
-  div.innerHTML +=
-    "<i style='background: " + colors[i] + "'></i> " +
-    magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+");
-}
-return div;
-};
-
-legend.addTo(map);
-});
+}).addTo(map)});
